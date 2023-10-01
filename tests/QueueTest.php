@@ -4,39 +4,49 @@ use PHPUnit\Framework\TestCase;
 
 class QueueTest extends TestCase
 {
-    /**
-     * @return Queue
-     */
-    public function testNewQueueIsEmpty():Queue
-    {
-        $queue = new Queue;
-        $this->assertEquals(0, $queue->getCount());
-
-        return $queue;
-    }
+    protected Queue $_queue;
 
     /**
-     * @depends testNewQueueIsEmpty
-     * @param Queue $queue
-     * @return Queue
-     */
-    public function testAnItemIsAddedToTheQueue(Queue $queue):Queue
-    {
-        $queue->push('green');
-        $this->assertEquals(1 , $queue->getCount());
-        return $queue;
-    }
-
-    /**
-     * @depends testAnItemIsAddedToTheQueue
-     * @param Queue $queue
+     * Run before each test.
      * @return void
      */
-    public function testAnItemIsRemovedFromTheQueue(Queue $queue): void
+    protected function setUp(): void
     {
-        $item = $queue->pop();
+        $this->_queue = new Queue;
+    }
 
-        $this->assertEquals(0, $queue->getCount());
+    /**
+     * This is run after each test.  Unsetting the property object is not really
+     * needed as it is not very memory intensive (but it is good practice.)
+     * tearDown will be good when writing to a file or when a network socket is made.
+     * @return void
+     */
+    protected function tearDown(): void
+    {
+        unset($this->_queue);
+    }
+
+    /**
+     * @return void
+     */
+    public function testNewQueueIsEmpty(): void
+    {
+        $this->assertEquals(0, $this->_queue->getCount());
+    }
+
+
+    public function testAnItemIsAddedToTheQueue(): void
+    {
+        $this->_queue->push('green');
+        $this->assertEquals(1 , $this->_queue->getCount());
+    }
+
+    public function testAnItemIsRemovedFromTheQueue(): void
+    {
+        $this->_queue->push('green');
+        $item = $this->_queue->pop();
+
+        $this->assertEquals(0, $this->_queue->getCount());
         $this->assertEquals('green', $item);
     }
 }
