@@ -4,81 +4,41 @@ use PHPUnit\Framework\TestCase;
 
 class QueueTest extends TestCase
 {
-    protected static Queue $_queue;
 
-    /**
-     * Run before each test.
-     * @return void
-     */
+    protected $queue;
+
     protected function setUp(): void
     {
-        static::$_queue->clear();
+        $this->queue = new Queue;
     }
 
-    /**
-     * This is run only one time before the first test method
-     * can be good for making connections to DBs or other resource
-     * intensive operations
-     * @return void
-     */
-    public static function setUpBeforeClass(): void
+    public function testNewQueueIsEmpty()
     {
-        static::$_queue = new Queue;
+        $this->assertEquals(0, $this->queue->getCount());
     }
 
-    /**
-     * This is run only one time after the last test method has been run.
-     * Use to clean up the setUpBeforeClass
-     * @return void
-     */
-    public static function tearDownAfterClass(): void
+    public function testAnItemIsAddedToTheQueue()
     {
-        static::$_queue = null;
+        $this->queue->push('green');
+        
+        $this->assertEquals(1, $this->queue->getCount());
     }
 
-
-    /**
-     * This is run after each test.  Unsetting the property object is not really
-     * needed as it is not very memory intensive (but it is good practice.)
-     * tearDown will be good when writing to a file or when a network socket is made.
-     * @return void
-     */
-    protected function tearDown(): void
+    public function testAnItemIsRemovedFromTheQueue()
     {
-
-    }
-
-    /**
-     * @return void
-     */
-    public function testNewQueueIsEmpty(): void
-    {
-        $this->assertEquals(0, static::$_queue->getCount());
-    }
-
-
-    public function testAnItemIsAddedToTheQueue(): void
-    {
-        static::$_queue->push('green');
-        $this->assertEquals(1 , static::$_queue->getCount());
-    }
-
-    public function testAnItemIsRemovedFromTheQueue(): void
-    {
-        static::$_queue->push('green');
-        $item = static::$_queue->pop();
-
-        $this->assertEquals(0, static::$_queue->getCount());
+        $this->queue->push('green');
+        $item = $this->queue->pop();
+        
+        $this->assertEquals(0, $this->queue->getCount());
         $this->assertEquals('green', $item);
     }
 
     public function testAnItemIsRemovedFromTheFrontOfTheQueue()
     {
-        static::$_queue->push('first');
-        static::$_queue->push('second');
+        $this->queue->push('first');
+        $this->queue->push('second');
 
-        $this->assertEquals('first', static::$_queue->pop());
+        $this->assertEquals('first', $this->queue->pop());
     }
-
 
 }
