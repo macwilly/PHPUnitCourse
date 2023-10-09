@@ -50,5 +50,21 @@ class QueueTest extends TestCase
         $this->assertEquals(Queue::MAX_ITEMS, $this->queue->getCount());
     }
 
+    /**
+     * Instead of using the for loop you can also make this test dependant upon testMaxNumberOfItemsCanBeAdded
+     * @return void
+     * @throws QueueException
+     */
+    public function testExceptionThrownWhenAddingAnItemToAFullQueue()
+    {
+        for ($i = 0; $i < Queue::MAX_ITEMS; $i++) {
+            $this->queue->push($i);
+        }
 
+        $this->expectException(QueueException::class);
+
+        $this->expectExceptionMessage("Queue is full");
+
+        $this->queue->push("wafer thin mint");
+    }
 }
